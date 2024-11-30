@@ -21,6 +21,7 @@ def render_main_page(request):
         csv_path = "/Users/isherz/Desktop/sber_chat/sber_chat/main/contacts.csv"
         contact_search = ContactSearch(csv_path)
 
+
         # Поиск в CSV
         csv_response = contact_search.query_contacts(query)
 
