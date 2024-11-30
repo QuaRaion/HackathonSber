@@ -1,0 +1,56 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'main/css/styles.css' %}">
+    <title>Чат-бот</title>
+</head>
+
+<body>
+    <div class="card-container">
+        <div class="card-header">
+            <div class="text-h2 text-black">Чат-бот</div>
+        </div>
+        <div class="card-body">
+            <div class="messages-container">
+                {% for message in messages %}
+                <div class="message-box right">
+                    <p class="text-h3 text-white">{{ message.query }}</p>
+                </div>
+                <div class="message-box left">
+                    <p class="text-h3 text-black">{{ message.response }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="">
+                <form method="post" class="message-input">
+                    {% csrf_token %}
+                    <textarea name="query" class="message-send text-h3 text-black" placeholder="Введите сообщение"></textarea>
+                    <button type="submit" class="button-send">
+                        <p class="text-h3 text-white">Отправить</p>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function scrollToBottom() {
+            const messagesContainer = document.querySelector('.messages-container');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        window.onload = function () {
+            scrollToBottom();
+        };
+
+        document.querySelector('.message-input form').onsubmit = function () {
+            setTimeout(scrollToBottom, 100);
+        };
+    </script>
+</body>
+
+</html>

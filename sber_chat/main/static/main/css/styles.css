@@ -1,0 +1,232 @@
+/* ОБЩИЕ СТИЛИ */
+html {
+    box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+button {
+    background: none;
+    border: none;
+    border-style: solid;
+    outline: none;
+    cursor: pointer;
+}
+
+input[class] {
+    border-style: none;
+    border: none;
+}
+
+a {
+    all: unset;
+    cursor: pointer;
+}
+
+ul,
+ol {
+    list-style: none;
+}
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: none;
+}
+
+select::-ms-expand {
+    display: none;
+}
+
+body {
+    font-family: "Onest", sans-serif;
+    font-weight: normal;
+    background-color: #373737;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+:root {
+    --accent-color: #0083F5;
+    --accent-bc: #024a9d;
+    --black-color: #373737;
+    --white-color: #fff;
+    --grey-color: #ECECEC;
+    --light-grey-color: rgba(237, 237, 237, 0.611);
+    --dark-grey-color: #AFAFAF;
+}
+
+.text-h2 {
+    font-family: "Onest", sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+}
+
+.text-h3 {
+    font-family: "Onest", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.text-h4 {
+    font-family: "Onest", sans-serif;
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.text-white {
+    color: var(--white-color);
+}
+
+.text-black {
+    color: var(--black-color);
+}
+
+.text-accent {
+    color: var(--accent-color);
+}
+
+.text-dark-grey {
+    color: var(--dark-grey-color);
+}
+
+/* стили для скролла */
+*::-webkit-scrollbar {
+    width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: var(--dark-grey-color);
+    border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: var(--dark-grey-color);
+}
+
+.header {
+    background-color: var(--black-color);
+}
+
+/* СТИЛИ ЧАТА */
+.card-container {
+    background-color: var(--white-color);
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    max-width: 70%;
+}
+
+.card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--black-color);
+}
+
+.card-header .img-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 20px;
+    background-color: var(--black-color);
+}
+
+.card-body {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.messages-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 10px;
+    padding: 15px;
+    max-height: calc(100vh* 0.6);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.message-box {
+    padding: 10px;
+    border-radius: 10px;
+    min-width: 30%;
+    max-width: 75%;
+    display: inline-block;
+    word-wrap: break-word;
+
+}
+
+.message-box.left {
+    background-color: var(--grey-color);
+    left: 0;
+    margin-right: auto;
+}
+
+.message-box.right {
+    background-color: var(--black-color);
+    right: 0;
+    margin-left: auto;
+
+}
+
+.message-input {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    border-top: 1px solid var(--black-color);
+}
+
+.message-send {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    resize: none;
+}
+
+.message-send:focus {
+    outline: none;
+    border: none;
+}
+
+.message-send::placeholder {
+    font-family: "Onest", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--dark-grey-color);
+}
+
+.button-send {
+    margin-left: 10px;
+}
+
+.message-input .button-send {
+    background-color: var(--black-color);
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.button-send:hover {
+    background-color: var(--dark-grey-color);
+}
