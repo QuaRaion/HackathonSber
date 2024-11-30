@@ -1,65 +1,50 @@
+import numpy as np
 import pandas as pd
-from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
+from sentence_transformers import SentenceTransformer
+class ContactSearch:
+    def __init__(self, file_path, model_name='paraphrase-MiniLM-L6-v2'):
+        # Инициализация модели и пути к файлу
+        self.model = SentenceTransformer(model_name)
+        self.file_path = file_path
+        self.data = self.load_data()
 
-# Загрузка модели и токенизатора
-tokenizer = AutoTokenizer.from_pretrained("ai-forever/ruGPT-3.5-13B")
-model = AutoModelForCausalLM.from_pretrained("ai-forever/ruGPT-3.5-13B")
+    def load_data(self):
+        # Загрузка данных из CSV
+        return pd.read_csv(self.file_path)
 
-# Создаем pipeline для генерации текста
-generator = pipeline("text-generation", model=model, tokenizer=tokenizer)
+    def create_embeddings(self):
+        # Векторизация текста
+        self.data['text'] = self.data.apply(lambda x: f"{x['category']} {x['name']}", axis=1)
+        self.data['embedding'] = self.data['text'].apply(lambda x: self.model.encode(x))
 
+    def search(self, query, top_k=3):
+        # Векторизация запроса
+        query_vec = self.model.encode(query)
 
-# Загрузка базы данных телефонов из Excel
-def load_phone_data(file_path):
-    data = pd.read_excel(file_path)
-    # Преобразуем данные в список словарей
-    return data.to_dict(orient="records")
+        # Расчет косинусного сходства
+        self.data['similarity'] = self.data['embedding'].apply(lambda x: np.dot(query_vec, x) /
+                                                                (np.linalg.norm(query_vec) * np.linalg.norm(x)))
 
+        # Сортировка по релевантности и выбор топовых результатов
+        results = self.data.sort_values(by='similarity', ascending=False).head(top_k)
+        return results[['id', 'name', 'category', 'phones', 'add_phone']]
 
-# Функция поиска номера телефона
-def search_phone(phone_number, phones):
-    for phone in phones:
-        if phone["phones"] == phone_number:
-            category = phone.get("category", "Категория не указана.")
-            name = phone.get("name", "Название не указано.")
-            add_phone = phone.get("add_phone", "Дополнительная информация отсутствует.")
-            return (f"Номер {phone_number} найден в базе.\n"
-                    f"Категория: {category}\n"
-                    f"Название: {name}\n"
-                    f"Дополнительная информация: {add_phone}")
-    return f"Номер {phone_number} не найден в базе."
+    def generate_response(self, results):
+        # Генерация ответа на основе результатов
+        if results.empty:
+            return "Извините, информация по вашему запросу не найдена."
 
+        response = "Вот что удалось найти:\n"
+        for _, row in results.iterrows():
+            response += f"- {row['name']} ({row['category']}): Телефон {row['phones']}\n"
+        return response
 
-# Функция для генерации ответа с использованием модели ruGPT-3.5-13B
-def ask_gpt3_5(prompt):
-    # Генерация текста с моделью
-    response = generator(prompt, max_length=150, num_return_sequences=1)
-    return response[0]['generated_text']
+    def query_contacts(self, query):
+        # Основная функция для запроса
+        self.create_embeddings()
 
+        # Поиск по запросу
+        results = self.search(query)
 
-# Основная функция взаимодействия
-def main():
-    # Загрузка данных из Excel
-    phones = load_phone_data("phones.xlsx")
-
-    print("Добро пожаловать! Вы можете искать номера телефонов в базе.")
-    while True:
-        user_input = input("Введите номер телефона (или 'выход' для завершения): ")
-        if user_input.lower() == "выход":
-            print("До свидания!")
-            break
-
-        # Проверяем номер в базе
-        result = search_phone(user_input, phones)
-        print(result)
-
-        # Формируем запрос для модели ruGPT-3.5
-        prompt = f"Найди номер {user_input} в базе данных и предоставь информацию по категории, названию и дополнительной информации. Если номер не найден, напиши, что его нет в базе."
-
-        # Получаем ответ от модели
-        gpt3_response = ask_gpt3_5(prompt)
-        print(f"Ответ от модели ruGPT-3.5-13B: {gpt3_response}")
-
-
-if __name__ == "__main__":
-    main()
+        # Генерация ответа
+        return self.generate_response(results)
