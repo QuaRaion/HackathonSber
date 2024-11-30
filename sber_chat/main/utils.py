@@ -1,10 +1,13 @@
-# from transformers import AutoModelForCausalLM, AutoTokenizer
+from gigachat import GigaChat
 
-# model_name = "ai-forever/rugpt3large_based_on_gpt2"
-# tokenizer = AutoTokenizer.from_pretrained(model_name)
-# model = AutoModelForCausalLM.from_pretrained(model_name)
+class GigaChatAPI:
+    def __init__(self, api_key):
+        self.model = GigaChat(credentials=api_key, model="GigaChat", verify_ssl_certs=False)
 
-# def generate_response(user_query):
-#     inputs = tokenizer.encode(user_query, return_tensors="pt")
-#     outputs = model.generate(inputs, max_length=100, num_return_sequences=1)
-#     return tokenizer.decode(outputs[0], skip_special_tokens=True)
+    def send_message(self, query):
+        messages = [{"role": "user", "content": query}]
+        response = self.model.chat({"messages": messages})
+
+        # Преобразуем в словарь перед использованием
+        response_dict = response.dict()
+        return response_dict["choices"][0]["message"]["content"]
