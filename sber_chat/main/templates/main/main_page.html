@@ -20,6 +20,7 @@
                 {% for message in messages %}
                 <div class="message-box right">
                     <p class="text-h3 text-white">{{ message.query }}</p>
+                    <p class="text-dark-grey time_message">{{ message.created_at|date:"D H:i" }}</p>
                 </div>
                 <div class="message-box left">
                     <p class="text-h3 text-black">{{ message.response }}</p>
@@ -29,7 +30,8 @@
             <div class="">
                 <form method="post" class="message-input">
                     {% csrf_token %}
-                    <textarea name="query" class="message-send text-h3 text-black" placeholder="Введите сообщение"></textarea>
+                    <textarea name="query" class="message-send text-h3 text-black"
+                        placeholder="Введите сообщение"></textarea>
                     <button type="submit" class="button-send">
                         <p class="text-h3 text-white">Отправить</p>
                     </button>
@@ -47,9 +49,25 @@
             scrollToBottom();
         };
 
-        document.querySelector('.message-input form').onsubmit = function () {
-            setTimeout(scrollToBottom, 100);
+        document.querySelector('.message-input form').onsubmit = function (event) {
+            const inputField = document.querySelector('textarea[name="query"]');
+            if (inputField.value.trim() === "") {
+                event.preventDefault();
+                return;
+            }
+
+            setTimeout(() => {
+                scrollToBottom();
+                inputField.value = "";
+            }, 100);
         };
+
+        document.querySelector('textarea[name="query"]').addEventListener('keydown', function (event) {
+            if ((event.key === 'Enter' || event.keyCode === 13) && !event.shiftKey) {
+                event.preventDefault();
+                document.querySelector('.message-input form').submit();
+            }
+        });
     </script>
 </body>
 

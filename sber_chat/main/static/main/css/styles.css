@@ -48,7 +48,9 @@ select::-ms-expand {
 body {
     font-family: "Onest", sans-serif;
     font-weight: normal;
+    /* background-color: #ffffff; */
     background-color: #373737;
+    /* background-color: #0ca552; */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -57,7 +59,7 @@ body {
 }
 
 :root {
-    --accent-color: #0083F5;
+    --accent-color: #0ca552;
     --accent-bc: #024a9d;
     --black-color: #373737;
     --white-color: #fff;
@@ -126,17 +128,17 @@ body {
 .card-container {
     background-color: var(--white-color);
     border-radius: 10px;
-    padding: 15px;
     display: flex;
     flex-direction: column;
     max-width: 70%;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.581);
 }
 
 .card-header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-bottom: 10px;
+    padding: 10px 0px;
     border-bottom: 1px solid var(--black-color);
 }
 
@@ -167,7 +169,7 @@ body {
 .message-box {
     padding: 10px;
     border-radius: 10px;
-    min-width: 30%;
+    min-width: 10%;
     max-width: 75%;
     display: inline-block;
     word-wrap: break-word;
@@ -184,6 +186,11 @@ body {
     background-color: var(--black-color);
     right: 0;
     margin-left: auto;
+
+}
+
+.time_message{
+    text-align: right;
 
 }
 
